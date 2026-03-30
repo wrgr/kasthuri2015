@@ -678,8 +678,24 @@ def not_validatable_results() -> list[ValidationResult]:
 # ---------------------------------------------------------------------------
 
 
-def validate_all(spreadsheet_path: str | None = None) -> list[ValidationResult]:
-    """Run all validations and return results."""
+def validate_all(
+    spreadsheet_path: str | None = None,
+    include_bossdb: bool = False,
+) -> list[ValidationResult]:
+    """Run all validations and return results.
+
+    Parameters
+    ----------
+    spreadsheet_path : str | None
+        Path to the synapse spreadsheet (mmc6.xls or mmc2.xls).
+        If None, the bundled copy is used (mmc6 preferred).
+    include_bossdb : bool
+        If True, query the BossDB REST API for volume-based claims.
+        Requires network access and the ``requests``/``blosc`` packages.
+        Claims that can be validated from BossDB will replace their
+        NOT_VALIDATABLE placeholders with live observations.
+        Defaults to False so that offline / unit-test runs remain fast.
+    """
     df = load_synapse_table(spreadsheet_path)
     results: list[ValidationResult] = []
 
@@ -719,8 +735,32 @@ def validate_all(spreadsheet_path: str | None = None) -> list[ValidationResult]:
     results.append(check_sasd_spine_volume(df))
     results.extend(check_sasd_feature_similarity(df))
 
-    # Claims requiring other sources
-    results.extend(not_validatable_results())
+    # Claims requiring other sources (BossDB volumes, metadata)
+    not_val = not_validatable_results()
+
+    if include_bossdb:
+        from kasthuri2015.bossdb import validate_bossdb
+        bossdb_results = validate_bossdb()
+        if bossdb_results:
+            # Build lookup by claim_id
+            bossdb_map = {r.claim_id: r for r in bossdb_results}
+            for nv in not_val:
+                if nv.claim_id in bossdb_map:
+                    br = bossdb_map[nv.claim_id]
+                    results.append(ValidationResult(
+                        claim_id=br.claim_id,
+                        status=br.status,
+                        expected=br.expected,
+                        observed=br.observed,
+                        note=br.note,
+                        source="bossdb",
+                    ))
+                else:
+                    results.append(nv)
+        else:
+            results.extend(not_val)
+    else:
+        results.extend(not_val)
 
     results.sort(key=lambda r: r.claim_id)
     return results
@@ -752,12 +792,13 @@ def print_results(results: list[ValidationResult]) -> None:
 def main() -> None:
     """CLI entry point."""
     path = None
+    use_bossdb = "--bossdb" in sys.argv
     for i, arg in enumerate(sys.argv[1:]):
         if arg == "--spreadsheet" and i + 1 < len(sys.argv) - 1:
             path = sys.argv[i + 2]
 
     print("Validating Kasthuri 2015 claims against ground truth…\n")
-    results = validate_all(path)
+    results = validate_all(path, include_bossdb=use_bossdb)
     print_results(results)
 
 

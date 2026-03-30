@@ -24,5 +24,7 @@ __all__ = [
     "list_categories",
     "list_claims",
     "summary_table",
+    # BossDB module (requires optional deps: requests, blosc)
+    "bossdb",
 ]
 __version__ = "0.1.0"
