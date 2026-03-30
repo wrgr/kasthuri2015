@@ -16,14 +16,16 @@ Coordinate system
 - Collection: kasthuri2015, Experiment: em
 - Resolution 0: 6 nm × 6 nm × 30 nm voxels (XY × Z)
 - Full frame: x=0:10752, y=0:13312, z=0:1849
-- Annotated cylinder region (3cyl bounding box):
-    x = 2500:7000  (~27 µm)
-    y = 7512:8912  (~8.4 µm)
-    z = 1004:1330  (~9.8 µm)
+- Annotated cylinder region tight bounding box (res=0):
+    x = 2806:6924  (~24.7 µm)
+    y = 7504:9508  (~12.0 µm)
+    z = 1004:1328  (~9.7 µm)
 
-The cylinder bounds were derived from the original notebook bounds
-(xbox=[694,1794], ybox=[1750,2460], zbox=[1004,1379] at 24 nm/voxel XY)
-by multiplying XY coordinates by 4 (24 nm → 6 nm).
+The cylinder bounds were empirically derived by scanning annotation
+channels for nonzero voxels. The original notebook used res=3 bounds
+(xbox=[694,1794], ybox=[1750,2460], zbox=[1004,1379] at 24 nm/voxel XY);
+multiplying XY by 4 gives approximate res=0 bounds. The Y extent is
+notably larger than the notebook estimate (9508 vs ~8912).
 
 Usage
 -----
@@ -60,11 +62,16 @@ CHANNEL_MITO = "mitochondria"
 # Resolution 0 voxel size
 VOXEL_NM = (6.0, 6.0, 30.0)  # x, y, z in nm
 
-# Annotated 3-cylinder bounding box in BossDB resolution-0 voxels
-# From notebook (24 nm/vox) × 4 for XY; Z unchanged (30 nm/vox)
-CYL_X = (2500, 7000)
-CYL_Y = (7512, 8912)
-CYL_Z = (1004, 1330)
+# Annotated 3-cylinder bounding box in BossDB resolution-0 voxels.
+# Tight axis-aligned bounds derived by scanning the annotation channels:
+#   X: 2806–6924  (~24.7 µm)   original notebook guess: 2500–7000
+#   Y: 7504–9508  (~12.0 µm)   original notebook guess: 7512–8912 (too short)
+#   Z: 1004–1328  (~9.7 µm)    notebook zbox=[1004,1379] at same res; 1328 is
+#                               where annotation ends
+# Data density peaks at x=3500–5500, y=7800–8800, z=1050–1260.
+CYL_X = (2806, 6924)
+CYL_Y = (7504, 9508)
+CYL_Z = (1004, 1328)
 
 # Chunk sizes for paged requests (larger chunks → fewer requests but more 504 risk)
 CHUNK_X = 1000
@@ -271,7 +278,7 @@ def check_neuron_count() -> BossDBResult:
         expected="~1600 neurons",
         observed=f"{n} unique segment IDs in {CHANNEL_NEURONS}{err_note}",
         note=(
-            "BossDB returns 1,901 unique IDs vs paper's ~1,600; overcount reflects "
+            "BossDB returns ~1,714 unique IDs vs paper's ~1,600; overcount reflects "
             "segmentation fragmentation (split neurons across sections each get a "
             "distinct ID). Manual merging would reduce to the reported neuron count."
         ),
@@ -366,7 +373,10 @@ def print_bossdb_results(results: list[BossDBResult]) -> None:
     counts = {s: 0 for s in icons}
 
     print(f"BossDB validation — collection={COLLECTION}/{EXPERIMENT}")
-    print(f"Cylinder bounds: x={CYL_X}, y={CYL_Y}, z={CYL_Z} (6nm×6nm×30nm voxels)\n")
+    print(
+        f"Cylinder bounds: x={CYL_X}, y={CYL_Y}, z={CYL_Z} "
+        f"(6nm×6nm×30nm voxels — tight empirical box)\n"
+    )
 
     for r in results:
         icon = icons.get(r.status, "  ??")
