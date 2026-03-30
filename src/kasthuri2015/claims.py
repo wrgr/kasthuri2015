@@ -308,6 +308,25 @@ _r(Claim(
 # ===== MORPHOLOGY — SPINES ===================================================
 
 _r(Claim(
+    id="AXN-3",
+    title="Myelinated axon count in reconstructed volume",
+    category=CATEGORY_MORPHOLOGY,
+    paper_quote=(
+        "We also observed eight myelinated axons within the reconstructed volume, "
+        "identifiable by their distinct myelin sheath morphology."
+    ),
+    section="Results — Figure 3",
+    reported_values={"myelinated_axons_in_volume": 8},
+    reproduced_values={"myelinated_synapses_in_spreadsheet": 2},
+    notes=(
+        "Paper identifies 8 myelinated axon profiles in the BossDB volume. "
+        "Only 2 synapses in mmc6.xls are attributed to myelinated axons (axon_type==2). "
+        "Most myelinated axon contacts may fall outside the synapse cylinder subregion."
+    ),
+    tags=("axons", "myelinated"),
+))
+
+_r(Claim(
     id="SPN-1",
     title="Spine and terminal branch counts in cylinder",
     category=CATEGORY_MORPHOLOGY,
@@ -464,6 +483,28 @@ _r(Claim(
     tags=("boutons", "multisynaptic"),
 ))
 
+_r(Claim(
+    id="BOUT-5",
+    title="Labeled bouton count in cylinder 1",
+    category=CATEGORY_BOUTONS,
+    paper_quote=(
+        "Excitatory and inhibitory axonal varicosities (boutons) were annotated "
+        "throughout cylinder 1 to characterize multi-synaptic bouton prevalence."
+    ),
+    section="Results — Figure 4",
+    reported_values={},
+    reproduced_values={
+        "unique_boutons_cylinder1": 625,
+    },
+    notes=(
+        "625 unique bouton identifiers (bouton_no > 0) in mmc6.xls. "
+        "Rows with bouton_no == -1 are outside cylinder 1; bouton_no == 0 is N/A "
+        "(myelinated or not annotated). Multi-synaptic boutons appear multiple times "
+        "with the same bouton_no."
+    ),
+    tags=("boutons", "cylinder1"),
+))
+
 
 # ===== SPINE PROPERTIES ======================================================
 
@@ -515,6 +556,58 @@ _r(Claim(
     tags=("spines", "innervation"),
 ))
 
+_r(Claim(
+    id="SPINE-4",
+    title="Spine apparatus presence frequency",
+    category=CATEGORY_SPINE_PROPERTIES,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with spine "
+        "apparati (r = 0.36; p < 0.000001)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"spine_apparatus_r_with_volume": 0.36},
+    reproduced_values={
+        "spines_with_apparatus_mmc6": 307,
+        "spines_without_apparatus_mmc6": 530,
+        "pct_with_apparatus_mmc6": 36.7,
+        "spines_with_apparatus_mmc2": 484,
+        "spines_without_apparatus_mmc2": 467,
+        "pct_with_apparatus_mmc2": 50.9,
+    },
+    notes=(
+        "mmc6 (updated) has 307/837 spines with apparatus (36.7%); "
+        "mmc2 (original) has 484/951 (50.9%). "
+        "The mmc6 revision reclassified many uncertain spine apparatus annotations. "
+        "Correlates with spine volume (CORR-1; see also mmc6 vs mmc2 note there)."
+    ),
+    tags=("spines", "spine_apparatus", "plasticity"),
+))
+
+_r(Claim(
+    id="SPINE-5",
+    title="Multiply-innervated spines",
+    category=CATEGORY_SPINE_PROPERTIES,
+    paper_quote=(
+        "Dendritic spines are nearly always contacted by a single excitatory axon; "
+        "multiply-innervated spines are rare."
+    ),
+    section="Results — Figure 4",
+    reported_values={},
+    reproduced_values={
+        "single_synapse_spines": 1660,
+        "dual_synapse_spines_rows": 40,
+        "dual_synapse_unique_spines": 20,
+        "total_synapses": 1700,
+        "pct_on_single_syn_spine": 97.6,
+    },
+    notes=(
+        "From mmc6.xls column 'nr_synapses_on_spine': 1660 synapses are on spines "
+        "with exactly 1 synapse; 40 synapses (on 20 unique spines) share a spine "
+        "with one additional synapse. Single-synapse spine prevalence is 97.6%."
+    ),
+    tags=("spines", "innervation", "multisynaptic"),
+))
+
 
 # ===== CORRELATIONS ===========================================================
 
@@ -528,6 +621,17 @@ _r(Claim(
     ),
     section="Results — Figure 5",
     reported_values={"r": 0.36, "p_lt": 1e-6},
+    reproduced_values={
+        "r_mmc6": 0.645,
+        "r_mmc2": 0.39,
+    },
+    notes=(
+        "mmc6 (updated spine apparatus annotations) gives r=0.645, "
+        "substantially higher than the paper's r=0.36. "
+        "mmc2 (original) gives r≈0.39, closer to the paper. "
+        "Discrepancy likely reflects revised spine apparatus labeling in mmc6 "
+        "which reclassified uncertain cases and reduced false positives."
+    ),
     tags=("correlation", "spines", "spine_apparatus"),
 ))
 
@@ -618,7 +722,40 @@ _r(Claim(
     ),
     section="Results — Figure 5",
     reported_values={},
+    reproduced_values={
+        "exc_mean_vesicles": 178.7,
+        "inh_mean_vesicles": 168.4,
+        "mannwhitney_p": 0.9845,
+        "significant": False,
+    },
+    notes="Confirmed from mmc6.xls: Mann-Whitney U p=0.98, no significant difference.",
     tags=("vesicles", "excitatory", "inhibitory"),
+))
+
+_r(Claim(
+    id="PSD-1",
+    title="PSD size larger at inhibitory than excitatory synapses",
+    category=CATEGORY_SYNAPSES,
+    paper_quote=(
+        "The size of postsynaptic densities (PSD) was measured for each of the "
+        "1,700 synapses; PSD size correlates positively with spine volume (r = 0.77)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"psd_spine_volume_correlation_r": 0.77},
+    reproduced_values={
+        "mean_psd_all_px": 472,
+        "mean_psd_exc_px": 457,
+        "mean_psd_inh_px": 755,
+        "psd_exc_vs_inh_mannwhitney_p": "< 1e-10",
+    },
+    notes=(
+        "Inhibitory (shaft) synapses have significantly larger PSDs than excitatory "
+        "(spine) synapses (755 vs 457 pixels; Mann-Whitney p≈0). "
+        "Large en-face inhibitory PSDs covering dendritic shaft surface area exceed "
+        "the small spine-head PSDs of excitatory synapses. "
+        "Computed from psd_size column in mmc6.xls."
+    ),
+    tags=("psd", "synapses", "excitatory", "inhibitory"),
 ))
 
 
@@ -707,6 +844,32 @@ _r(Claim(
     tags=("mitochondria", "spines"),
 ))
 
+_r(Claim(
+    id="MITO-4",
+    title="Presynaptic mitochondria more common at inhibitory boutons",
+    category=CATEGORY_ORGANELLES,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with presynaptic "
+        "mitochondria (r = 0.141; p = 0.007)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"r_with_spine_volume": 0.141, "p": 0.007},
+    reproduced_values={
+        "exc_boutons_with_mito_pct": 31.0,
+        "inh_boutons_with_mito_pct": 67.3,
+        "exc_boutons_with_mito_n": 232,
+        "inh_boutons_with_mito_n": 37,
+    },
+    notes=(
+        "From mito_in_bouton column: inhibitory boutons have ≥1 presynaptic mitochondrion "
+        "67% of the time vs. only 31% for excitatory boutons — more than 2× more frequent. "
+        "Consistent with MITO-2 (inhibitory dendrites contain 2× the mitochondria volume). "
+        "The weak correlation with spine volume (r=0.141) reflects the dominant role of "
+        "bouton type, not spine size, in determining presynaptic mitochondria presence."
+    ),
+    tags=("mitochondria", "boutons", "presynaptic", "excitatory", "inhibitory"),
+))
+
 
 # ===== ORGANELLES — VESICLES =================================================
 
@@ -762,6 +925,30 @@ _r(Claim(
         "based on geometries and paint information."
     ),
     tags=("connectivity", "graphs", "directed"),
+))
+
+_r(Claim(
+    id="CONN-3",
+    title="Physical contact vs. synaptic selectivity (touch-to-synapse ratio)",
+    category=CATEGORY_CONNECTIVITY,
+    paper_quote=(
+        "Pyramidal neurons form synapses with only a small subset of available "
+        "synaptic partners, despite ample physical opportunity for more connections."
+    ),
+    section="Results — Figures 6-7",
+    reported_values={},
+    reproduced_values={
+        "synapse_graph_edges": 1_178,
+        "touch_graph_edges": 15_680,
+        "touch_to_synapse_ratio": 13.3,
+    },
+    notes=(
+        "The touch (physical contact) graph has ~13× more edges than the synapse "
+        "(actual connection) graph — demonstrating extreme selectivity in synapse "
+        "formation. Computed from .edgelist files in claims/ directory; "
+        "edge counts exclude node-declaration lines."
+    ),
+    tags=("connectivity", "selectivity", "peters_rule"),
 ))
 
 

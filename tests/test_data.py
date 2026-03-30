@@ -30,8 +30,11 @@ def test_axon_type_distribution():
 
 def test_spine_vs_shaft():
     df = load_synapse_table()
-    assert (df["is_spine"] == 1).sum() == 1424
-    assert (df["is_spine"] == 0).sum() == 275
+    # mmc6 (preferred): 1427 spine, 273 shaft; mmc2 (fallback): 1424 spine, 275 shaft
+    spine_count = (df["is_spine"] == 1).sum()
+    shaft_count = (df["is_spine"] == 0).sum()
+    assert spine_count + shaft_count == 1700
+    assert spine_count in (1424, 1427), f"Unexpected spine count: {spine_count}"
 
 
 def test_excitatory_filter():

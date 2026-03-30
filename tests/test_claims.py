@@ -12,7 +12,7 @@ from kasthuri2015 import (
 
 
 def test_claim_count():
-    assert len(CLAIMS) == 47
+    assert len(CLAIMS) == 54
 
 
 def test_list_claims_returns_all():
