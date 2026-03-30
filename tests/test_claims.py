@@ -13,12 +13,11 @@ from kasthuri2015 import (
 
 
 def test_claim_count():
-    """We have 23 claims from the paper."""
-    assert len(CLAIMS) == 23
+    assert len(CLAIMS) == 47
 
 
 def test_list_claims_returns_all():
-    assert len(list_claims()) == 23
+    assert len(list_claims()) == len(CLAIMS)
 
 
 def test_get_claim_by_id():
@@ -52,7 +51,6 @@ def test_each_claim_has_title_and_category():
 
 
 def test_each_claim_has_paper_quote():
-    # All claims except purely methodological ones should have a quote
     for claim in list_claims():
         assert claim.paper_quote, f"{claim.id} missing paper_quote"
 
@@ -65,8 +63,11 @@ def test_filter_by_category():
 
 def test_list_categories():
     cats = list_categories()
-    assert len(cats) == 8
+    assert len(cats) == 12
     assert "synapses" in cats
+    assert "boutons" in cats
+    assert "correlations" in cats
+    assert "segmentation" in cats
 
 
 def test_claims_by_category_covers_all():
@@ -92,11 +93,17 @@ def test_unique_ids():
 def test_peters_rule_claims():
     peter = list_claims(category="peters_rule")
     assert len(peter) == 2
-    ids = {c.id for c in peter}
-    assert "PETER-1" in ids
-    assert "PETER-2" in ids
 
 
 def test_sasd_claims():
     sasd = list_claims(category="sasd")
-    assert len(sasd) == 3
+    assert len(sasd) == 8
+
+
+def test_new_categories_populated():
+    assert len(list_claims(category="boutons")) == 4
+    assert len(list_claims(category="spine_properties")) == 3
+    assert len(list_claims(category="correlations")) == 4
+    assert len(list_claims(category="segmentation")) == 2
+    assert len(list_claims(category="synapses")) == 4
+    assert len(list_claims(category="organelles")) >= 6

@@ -24,20 +24,28 @@ CATEGORY_IMAGING = "imaging"
 CATEGORY_CELLULAR_INVENTORY = "cellular_inventory"
 CATEGORY_MORPHOLOGY = "morphology"
 CATEGORY_SYNAPSES = "synapses"
+CATEGORY_BOUTONS = "boutons"
 CATEGORY_ORGANELLES = "organelles"
+CATEGORY_SPINE_PROPERTIES = "spine_properties"
+CATEGORY_CORRELATIONS = "correlations"
 CATEGORY_CONNECTIVITY = "connectivity"
 CATEGORY_PETERS_RULE = "peters_rule"
 CATEGORY_SASD = "sasd"
+CATEGORY_SEGMENTATION = "segmentation"
 
 CATEGORIES = {
     CATEGORY_IMAGING: "Imaging & data acquisition (Figures 1-2)",
     CATEGORY_CELLULAR_INVENTORY: "Cellular inventory & composition (Figure 3)",
     CATEGORY_MORPHOLOGY: "Neuronal morphology — axons, dendrites, spines (Figures 3-4)",
-    CATEGORY_SYNAPSES: "Synapse counts & density (Figure 4)",
+    CATEGORY_SYNAPSES: "Synapse counts, density & targets (Figure 4)",
+    CATEGORY_BOUTONS: "Axonal boutons & varicosities (Figure 4)",
     CATEGORY_ORGANELLES: "Sub-cellular organelles — mitochondria & vesicles (Figure 5)",
+    CATEGORY_SPINE_PROPERTIES: "Dendritic spine morphology & properties (Figures 4-5)",
+    CATEGORY_CORRELATIONS: "Structure-function correlations (Figure 5)",
     CATEGORY_CONNECTIVITY: "Connectivity graph structure (Figures 6-7)",
     CATEGORY_PETERS_RULE: "Refutation of Peters' Rule (Figures 6-7)",
     CATEGORY_SASD: "Same-Axon-Same-Dendrite (SASD) redundancy analysis",
+    CATEGORY_SEGMENTATION: "Automated segmentation accuracy (Figure 2)",
 }
 
 
@@ -344,6 +352,310 @@ _r(Claim(
     tags=("synapses", "density"),
 ))
 
+_r(Claim(
+    id="SYN-2",
+    title="Excitatory synapses target spines",
+    category=CATEGORY_SYNAPSES,
+    paper_quote=(
+        "Excitatory axons establish synapses mostly on spines "
+        "(94%; n = 1,406/1,700)."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "excitatory_on_spines": 1_406,
+        "excitatory_on_spines_pct": 94,
+        "total_synapses_denominator": 1_700,
+    },
+    tags=("synapses", "excitatory", "spines"),
+))
+
+_r(Claim(
+    id="SYN-3",
+    title="Inhibitory synapses target shafts",
+    category=CATEGORY_SYNAPSES,
+    paper_quote=(
+        "Inhibitory axons establish synapses mostly on shafts "
+        "(81%, n = 70/86)."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "inhibitory_on_shafts": 70,
+        "inhibitory_total": 86,
+        "inhibitory_on_shafts_pct": 81,
+    },
+    tags=("synapses", "inhibitory", "shafts"),
+))
+
+_r(Claim(
+    id="SYN-4",
+    title="En passant vs. terminal synapses",
+    category=CATEGORY_SYNAPSES,
+    paper_quote=(
+        "Most (71%; n = 1,207/1,700) of the synapses in the volume derive "
+        "from varicosities along axons (en passant synapses), and the rest "
+        "are at the end of short branches (terminal synapses)."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "en_passant_synapses": 1_207,
+        "en_passant_pct": 71,
+        "terminal_synapses": 493,
+    },
+    tags=("synapses", "en_passant", "terminal"),
+))
+
+
+# ===== BOUTONS & VARICOSITIES ================================================
+
+_r(Claim(
+    id="BOUT-1",
+    title="Multi-synaptic excitatory varicosities",
+    category=CATEGORY_BOUTONS,
+    paper_quote=(
+        "18% of excitatory axonal varicosities are presynaptic to "
+        "multiple partners."
+    ),
+    section="Results — Figure 4",
+    reported_values={"excitatory_multisynaptic_pct": 18},
+    tags=("boutons", "multisynaptic", "excitatory"),
+))
+
+_r(Claim(
+    id="BOUT-2",
+    title="Multi-synaptic inhibitory varicosities",
+    category=CATEGORY_BOUTONS,
+    paper_quote=(
+        "43% of the inhibitory axonal varicosities are presynaptic to "
+        "multiple partners."
+    ),
+    section="Results — Figure 4",
+    reported_values={"inhibitory_multisynaptic_pct": 43},
+    tags=("boutons", "multisynaptic", "inhibitory"),
+))
+
+_r(Claim(
+    id="BOUT-3",
+    title="Maximum multi-synaptic bouton target count",
+    category=CATEGORY_BOUTONS,
+    paper_quote=(
+        "The most extreme example in this dataset is a large excitatory "
+        "en passant bouton innervating five different postsynaptic targets."
+    ),
+    section="Results — Figure 4",
+    reported_values={"max_postsynaptic_targets": 5},
+    tags=("boutons", "multisynaptic"),
+))
+
+_r(Claim(
+    id="BOUT-4",
+    title="Multi-synaptic varicosities are general",
+    category=CATEGORY_BOUTONS,
+    paper_quote=(
+        "Tracing ten randomly chosen axons (with 78 varicosities) into the "
+        "larger surrounding volume showed all but one axon had at least one "
+        "multi-synaptic varicosity."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "axons_sampled": 10,
+        "varicosities_sampled": 78,
+        "axons_with_multisynaptic": 9,
+    },
+    tags=("boutons", "multisynaptic"),
+))
+
+
+# ===== SPINE PROPERTIES ======================================================
+
+_r(Claim(
+    id="SPINE-1",
+    title="Spine density on red dendrite",
+    category=CATEGORY_SPINE_PROPERTIES,
+    paper_quote=(
+        "Spines appear more densely packed (~51 spines per 10 um dendritic "
+        "length for the red dendrite in cylinder 1)."
+    ),
+    section="Results — Figure 4",
+    reported_values={"spines_per_10um": 51},
+    tags=("spines", "density"),
+))
+
+_r(Claim(
+    id="SPINE-2",
+    title="Spine length distribution",
+    category=CATEGORY_SPINE_PROPERTIES,
+    paper_quote=(
+        "Spines often of greater length (mean ~1.8 +/- 0.6 um and longest "
+        "~3.8 um; n = 77) than expected in mouse cortex."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "spine_length_mean_um": 1.8,
+        "spine_length_sd_um": 0.6,
+        "spine_length_max_um": 3.8,
+        "n_spines_measured": 77,
+    },
+    tags=("spines", "morphology"),
+))
+
+_r(Claim(
+    id="SPINE-3",
+    title="Non-innervated spines",
+    category=CATEGORY_SPINE_PROPERTIES,
+    paper_quote=(
+        "Approximately 5% (39/780) of spines belonging to the central "
+        "dendrite were not innervated by an axon."
+    ),
+    section="Results — Figure 4",
+    reported_values={
+        "non_innervated_spines": 39,
+        "total_spines_checked": 780,
+        "non_innervated_pct": 5,
+    },
+    tags=("spines", "innervation"),
+))
+
+
+# ===== CORRELATIONS ===========================================================
+
+_r(Claim(
+    id="CORR-1",
+    title="Spine volume correlates with spine apparatus",
+    category=CATEGORY_CORRELATIONS,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with spine "
+        "apparati (r = 0.36; p < 0.000001)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"r": 0.36, "p_lt": 1e-6},
+    tags=("correlation", "spines", "spine_apparatus"),
+))
+
+_r(Claim(
+    id="CORR-2",
+    title="Spine volume correlates with PSD size",
+    category=CATEGORY_CORRELATIONS,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with larger "
+        "postsynaptic densities (r = 0.77; p < 0.000001)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"r": 0.77, "p_lt": 1e-6},
+    tags=("correlation", "spines", "psd"),
+))
+
+_r(Claim(
+    id="CORR-3",
+    title="Spine volume correlates with vesicle count",
+    category=CATEGORY_CORRELATIONS,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with larger "
+        "numbers of presynaptic vesicles (r = 0.58; p < 0.000001)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"r": 0.58, "p_lt": 1e-6},
+    tags=("correlation", "spines", "vesicles"),
+))
+
+_r(Claim(
+    id="CORR-4",
+    title="Spine volume correlates with presynaptic mitochondria",
+    category=CATEGORY_CORRELATIONS,
+    paper_quote=(
+        "Larger spine volumes were positively correlated with presynaptic "
+        "mitochondria (r = 0.141; p = 0.007)."
+    ),
+    section="Results — Figure 5",
+    reported_values={"r": 0.141, "p": 0.007},
+    tags=("correlation", "spines", "mitochondria"),
+))
+
+
+# ===== ORGANELLES — VESICLE DISTRIBUTION =====================================
+
+_r(Claim(
+    id="VES-2",
+    title="Vesicle count per mono-synaptic varicosity",
+    category=CATEGORY_ORGANELLES,
+    paper_quote=(
+        "The number of vesicles per synaptic varicosity ranged from 2 to "
+        "1,366 for varicosities with one postsynaptic target "
+        "(mean = 153 +/- 127)."
+    ),
+    section="Results — Figure 5",
+    reported_values={
+        "vesicles_per_varicosity_min": 2,
+        "vesicles_per_varicosity_max": 1_366,
+        "vesicles_per_varicosity_mean": 153,
+        "vesicles_per_varicosity_sd": 127,
+    },
+    tags=("vesicles", "varicosity"),
+))
+
+_r(Claim(
+    id="VES-3",
+    title="More vesicles at multi-synaptic varicosities",
+    category=CATEGORY_ORGANELLES,
+    paper_quote=(
+        "Significantly greater numbers of vesicles at multi-synaptic "
+        "varicosities (mean = 200 +/- 173)."
+    ),
+    section="Results — Figure 5",
+    reported_values={
+        "multisynaptic_vesicles_mean": 200,
+        "multisynaptic_vesicles_sd": 173,
+    },
+    tags=("vesicles", "multisynaptic"),
+))
+
+_r(Claim(
+    id="VES-4",
+    title="Vesicle count similar in excitatory and inhibitory synapses",
+    category=CATEGORY_ORGANELLES,
+    paper_quote=(
+        "The number of vesicles is not significantly different in excitatory "
+        "and inhibitory synapses."
+    ),
+    section="Results — Figure 5",
+    reported_values={},
+    tags=("vesicles", "excitatory", "inhibitory"),
+))
+
+
+# ===== SEGMENTATION ==========================================================
+
+_r(Claim(
+    id="SEG-1",
+    title="Automated segmentation pixel accuracy",
+    category=CATEGORY_SEGMENTATION,
+    paper_quote=(
+        "In single images, 92.6% of the pixels or 87.6% of the profiles "
+        "were correctly segmented."
+    ),
+    section="Results — Figure 2",
+    reported_values={
+        "pixel_accuracy_pct": 92.6,
+        "profile_accuracy_pct": 87.6,
+    },
+    tags=("segmentation", "accuracy"),
+))
+
+_r(Claim(
+    id="SEG-2",
+    title="3D segmentation error rates",
+    category=CATEGORY_SEGMENTATION,
+    paper_quote=(
+        "In three dimensions we estimated the need for ~0.9 split "
+        "operations and 5.8 merge operations per um³."
+    ),
+    section="Results — Figure 2",
+    reported_values={
+        "splits_per_um3": 0.9,
+        "merges_per_um3": 5.8,
+    },
+    tags=("segmentation", "errors"),
+))
+
 
 # ===== ORGANELLES — MITOCHONDRIA =============================================
 
@@ -525,25 +837,118 @@ _r(Claim(
 
 _r(Claim(
     id="SASD-2",
-    title="SASD spine volume similarity",
+    title="SASD spine volume similarity (vs. non-SASD)",
     category=CATEGORY_SASD,
     paper_quote=(
         "The similarity in the volumes of axon-coupled pairs of dendritic spines "
         "were statistically significant."
     ),
     section="Results / Supplemental",
-    reported_values={"spine_volume_p_value": 3.4e-4},
+    reported_values={
+        "feature": "log10_spine_volume",
+        "mean_diff_sasd": 0.2017,
+        "mean_diff_non_sasd": 0.3269,
+        "difference": 0.1252,
+        "p_value": 3.4e-4,
+        "p_adjusted_by": 0.003,
+    },
     reproduced_values={},
     notes=(
-        "Permutation test (10,000 iterations) from SASDPairs/SynapsePairTest.R. "
-        "Tested variables: spine volume, PSD volume, vesicle count, mitochondria, "
-        "spine apparatus. Only spine volume was significant after BY correction."
+        "Permutation test from SASDPairs/SynapsePairTest.R. "
+        "Only spine volume was significant after Benjamini-Yekutieli correction."
     ),
     tags=("sasd", "statistics", "spines"),
 ))
 
 _r(Claim(
     id="SASD-3",
+    title="SASD PSD volume similarity (not significant)",
+    category=CATEGORY_SASD,
+    paper_quote="PSD volume: SASD pairs more similar but not significant after correction.",
+    section="Supplemental",
+    reported_values={
+        "feature": "log10_psd_volume",
+        "mean_diff_sasd": 0.2876,
+        "mean_diff_non_sasd": 0.3379,
+        "difference": 0.05,
+        "p_value": 0.11,
+        "p_adjusted_by": 0.322,
+    },
+    tags=("sasd", "statistics", "psd"),
+))
+
+_r(Claim(
+    id="SASD-4",
+    title="SASD vesicle count similarity (not significant)",
+    category=CATEGORY_SASD,
+    paper_quote="Vesicle count: SASD pairs more similar but not significant after correction.",
+    section="Supplemental",
+    reported_values={
+        "feature": "log10_vesicle_count",
+        "mean_diff_sasd": 0.2896,
+        "mean_diff_non_sasd": 0.3476,
+        "difference": 0.058,
+        "p_value": 0.08,
+        "p_adjusted_by": 0.322,
+    },
+    tags=("sasd", "statistics", "vesicles"),
+))
+
+_r(Claim(
+    id="SASD-5",
+    title="SASD spine apparatus similarity (not significant)",
+    category=CATEGORY_SASD,
+    paper_quote="Spine apparatus: SASD pairs more similar but not significant after correction.",
+    section="Supplemental",
+    reported_values={
+        "feature": "spine_apparatus_pct_diff",
+        "mean_diff_sasd_pct": 51,
+        "mean_diff_non_sasd_pct": 68,
+        "difference_pct": 16,
+        "p_value": 0.014,
+        "p_adjusted_by": 0.084,
+    },
+    tags=("sasd", "statistics", "spine_apparatus"),
+))
+
+_r(Claim(
+    id="SASD-6",
+    title="SASD mitochondria count similarity (not significant)",
+    category=CATEGORY_SASD,
+    paper_quote="Number of mitochondria: SASD pairs slightly more similar, not significant.",
+    section="Supplemental",
+    reported_values={
+        "feature": "n_mitos_pct_diff",
+        "mean_diff_sasd_pct": 40,
+        "mean_diff_non_sasd_pct": 43,
+        "difference_pct": 3.56,
+        "p_value": 0.27,
+        "p_adjusted_by": 0.636,
+    },
+    tags=("sasd", "statistics", "mitochondria"),
+))
+
+_r(Claim(
+    id="SASD-7",
+    title="DASD vs. DADD — spine volume on same dendrite",
+    category=CATEGORY_SASD,
+    paper_quote=(
+        "Spine volume is highly significant when comparing DASD to DADD pairs, "
+        "and interestingly number of mitochondria also showed a significant effect."
+    ),
+    section="Supplemental",
+    reported_values={
+        "spine_volume_p": 1e-4,
+        "psd_volume_p": 0.072,
+        "vesicle_count_p": 0.147,
+        "spine_apparatus_p": 0.1029,
+        "n_mitos_p": 0.0064,
+    },
+    tags=("sasd", "statistics", "dendrite_effect"),
+))
+
+_r(Claim(
+    id="SASD-8",
     title="Spine shape not solely driven by electrical activity",
     category=CATEGORY_SASD,
     paper_quote=(
