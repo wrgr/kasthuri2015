@@ -4,7 +4,25 @@ Saturated Reconstruction of a Volume of Neocortex.
 Cell 162(3), 648-661. doi:10.1016/j.cell.2015.06.054
 """
 
-from kasthuri2015.claims import CLAIMS, Claim, get_claim, list_claims
+from kasthuri2015.claims import (
+    CATEGORIES,
+    CLAIMS,
+    Claim,
+    claims_by_category,
+    get_claim,
+    list_categories,
+    list_claims,
+    summary_table,
+)
 
-__all__ = ["CLAIMS", "Claim", "get_claim", "list_claims"]
+__all__ = [
+    "CATEGORIES",
+    "CLAIMS",
+    "Claim",
+    "claims_by_category",
+    "get_claim",
+    "list_categories",
+    "list_claims",
+    "summary_table",
+]
 __version__ = "0.1.0"
