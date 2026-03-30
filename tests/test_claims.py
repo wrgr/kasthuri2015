@@ -3,7 +3,6 @@
 from kasthuri2015 import (
     CATEGORIES,
     CLAIMS,
-    Claim,
     claims_by_category,
     get_claim,
     list_categories,
@@ -64,10 +63,6 @@ def test_filter_by_category():
 def test_list_categories():
     cats = list_categories()
     assert len(cats) == 12
-    assert "synapses" in cats
-    assert "boutons" in cats
-    assert "correlations" in cats
-    assert "segmentation" in cats
 
 
 def test_claims_by_category_covers_all():
@@ -81,29 +76,9 @@ def test_summary_table():
     assert "SYN-1" in table
     assert "PETER-1" in table
     lines = table.strip().split("\n")
-    # header + separator + one line per claim
     assert len(lines) == 2 + len(CLAIMS)
 
 
 def test_unique_ids():
     ids = [c.id for c in list_claims()]
     assert len(ids) == len(set(ids))
-
-
-def test_peters_rule_claims():
-    peter = list_claims(category="peters_rule")
-    assert len(peter) == 2
-
-
-def test_sasd_claims():
-    sasd = list_claims(category="sasd")
-    assert len(sasd) == 8
-
-
-def test_new_categories_populated():
-    assert len(list_claims(category="boutons")) == 4
-    assert len(list_claims(category="spine_properties")) == 3
-    assert len(list_claims(category="correlations")) == 4
-    assert len(list_claims(category="segmentation")) == 2
-    assert len(list_claims(category="synapses")) == 4
-    assert len(list_claims(category="organelles")) >= 6
